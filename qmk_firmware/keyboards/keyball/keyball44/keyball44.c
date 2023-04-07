@@ -44,3 +44,16 @@ void keyball_on_adjust_layout(keyball_adjust_t v) {
     rgblight_set_effect_range(0, lednum_this + lednum_that);
 #endif
 }
+
+// in <keyboard>.c:
+bool is_mouse_record_kb(uint16_t keycode, keyrecord_t* record) {
+    switch(keycode) {
+        case KC_ENT:
+            return true;
+        case KC_RIGHT ... KC_UP:
+            return true;
+        default:
+            return false;
+    }
+    return  is_mouse_record_user(keycode, record);
+}
