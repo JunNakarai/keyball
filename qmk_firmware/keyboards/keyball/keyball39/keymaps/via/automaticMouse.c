@@ -7,6 +7,10 @@
 
 #include "automaticMouse.h"
 
+#define CLICK_LAYER 6           // マウス入力が可能になった際に有効になるレイヤー。Layers enabled when mouse input is enabled
+#define SCROLL_V_THRESHOLD  50  // この閾値を超える度に垂直スクロールが実行される。 Vertical scrolling is performed each time this threshold is exceeded.
+#define SCROLL_H_THRESHOLD  50  // この閾値を超える度に水平スクロールが実行される。 Each time this threshold is exceeded, horizontal scrolling is performed.
+
 enum custom_keycodes {
     KC_MY_BTN1 = KEYBALL_SAFE_RANGE,
     KC_MY_BTN2,
@@ -30,17 +34,11 @@ uint16_t click_timer;       // タイマー。状態に応じて時間で判定�
 uint16_t to_reset_time = 1000; // この秒数(千分の一秒)、CLICKABLE状態ならクリックレイヤーが無効になる。 For this number of seconds (milliseconds), the click layer is disabled if in CLICKABLE state.
 int16_t scroll_v_mouse_interval_counter;   // 垂直スクロールの入力をカウントする。　Counting Vertical Scroll Inputs
 int16_t scroll_h_mouse_interval_counter;   // 水平スクロールの入力をカウントする。  Counts horizontal scrolling inputs.
-int16_t scroll_v_threshold = 50;    // この閾値を超える度に垂直スクロールが実行される。 Vertical scrolling is performed each time this threshold is exceeded.
-int16_t scroll_h_threshold = 50;    // この閾値を超える度に水平スクロールが実行される。 Each time this threshold is exceeded, horizontal scrolling is performed.
 int16_t after_click_lock_movement = 0;      // クリック入力後の移動量を測定する変数。 Variable that measures the amount of movement after a click input.
-int16_t mouse_record_threshold = 30;    // ポインターの動きを一時的に記録するフレーム数。 Number of frames in which the pointer movement is temporarily recorded.
-int16_t mouse_move_count_ratio = 5;     // ポインターの動きを再生する際の移動フレームの係数。 The coefficient of the moving frame when replaying the pointer movement.
-
-const uint16_t click_layer = 6;   // マウス入力が可能になった際に有効になるレイヤー。Layers enabled when mouse input is enabled
 
 // クリック用のレイヤーを有効にする。　Enable layers for clicks
 void enable_click_layer(void) {
-    layer_on(click_layer);
+    layer_on(CLICK_LAYER);
     click_timer = timer_read();
     state = CLICKABLE;
 }
@@ -48,7 +46,7 @@ void enable_click_layer(void) {
 // クリック用のレイヤーを無効にする。 Disable layers for clicks.
 void disable_click_layer(void) {
     state = NONE;
-    layer_off(click_layer);
+    layer_off(CLICK_LAYER);
     scroll_v_mouse_interval_counter = 0;
     scroll_h_mouse_interval_counter = 0;
 }
@@ -176,13 +174,13 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
                 if (my_abs(current_y) * 2 > my_abs(current_x)) {
 
                     scroll_v_mouse_interval_counter += current_y;
-                    while (my_abs(scroll_v_mouse_interval_counter) > scroll_v_threshold) {
+                    while (my_abs(scroll_v_mouse_interval_counter) > SCROLL_V_THRESHOLD) {
                         if (scroll_v_mouse_interval_counter < 0) {
-                            scroll_v_mouse_interval_counter += scroll_v_threshold;
-                            rep_v += scroll_v_threshold;
+                            scroll_v_mouse_interval_counter += SCROLL_V_THRESHOLD;
+                            rep_v += SCROLL_V_THRESHOLD;
                         } else {
-                            scroll_v_mouse_interval_counter -= scroll_v_threshold;
-                            rep_v -= scroll_v_threshold;
+                            scroll_v_mouse_interval_counter -= SCROLL_V_THRESHOLD;
+                            rep_v -= SCROLL_V_THRESHOLD;
                         }
                         
                     }
@@ -190,19 +188,19 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 
                     scroll_h_mouse_interval_counter += current_x;
 
-                    while (my_abs(scroll_h_mouse_interval_counter) > scroll_h_threshold) {
+                    while (my_abs(scroll_h_mouse_interval_counter) > SCROLL_H_THRESHOLD) {
                         if (scroll_h_mouse_interval_counter < 0) {
-                            scroll_h_mouse_interval_counter += scroll_h_threshold;
-                            rep_h += scroll_h_threshold;
+                            scroll_h_mouse_interval_counter += SCROLL_H_THRESHOLD;
+                            rep_h += SCROLL_H_THRESHOLD;
                         } else {
-                            scroll_h_mouse_interval_counter -= scroll_h_threshold;
-                            rep_h -= scroll_h_threshold;
+                            scroll_h_mouse_interval_counter -= SCROLL_H_THRESHOLD;
+                            rep_h -= SCROLL_H_THRESHOLD;
                         }
                     }
                 }
 
-                current_h = rep_h / scroll_h_threshold;
-                current_v = -rep_v / scroll_v_threshold;
+                current_h = rep_h / SCROLL_H_THRESHOLD;
+                current_v = -rep_v / SCROLL_V_THRESHOLD;
                 current_x = 0;
                 current_y = 0;
             }
