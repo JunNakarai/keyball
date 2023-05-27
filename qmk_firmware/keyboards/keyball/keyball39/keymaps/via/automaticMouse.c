@@ -11,15 +11,6 @@
 #define SCROLL_V_THRESHOLD  50  // この閾値を超える度に垂直スクロールが実行される。 Vertical scrolling is performed each time this threshold is exceeded.
 #define SCROLL_H_THRESHOLD  50  // この閾値を超える度に水平スクロールが実行される。 Each time this threshold is exceeded, horizontal scrolling is performed.
 
-enum custom_keycodes {
-    KC_MY_BTN1 = KEYBALL_SAFE_RANGE,
-    KC_MY_BTN2,
-    KC_MY_BTN3,
-    KC_MY_SCR,
-    KC_TO_CLICKABLE_INC,
-    KC_TO_CLICKABLE_DEC
-};
-
 enum click_state {
     NONE = 0,
     WAITING,    // マウスレイヤーが有効になるのを待つ。 Wait for mouse layer to activate.

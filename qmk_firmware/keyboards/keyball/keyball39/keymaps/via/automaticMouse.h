@@ -8,6 +8,20 @@
 #include QMK_KEYBOARD_H
 #include "quantum.h"
 
+enum custom_keycodes {
+    KC_MY_BTN1 = KEYBALL_SAFE_RANGE,  //0x5DBB
+    KC_MY_BTN2,
+    KC_MY_BTN3,
+    KC_MY_SCR,
+    KC_TO_CLICKABLE_INC,              // マウスレイヤーが有効になるまでの待機時間を増やす
+    KC_TO_CLICKABLE_DEC,              // マウスレイヤーが有効になるまでの待機時間を減らす
+    KC_MY_CMD_X,                      // CMD+X
+    KC_MY_CMD_C,                      // CMD+C
+    KC_MY_CMD_V,                      // CMD+V
+    KC_MY_CMD_Z,                      // CMD+Z
+    KC_MY_CMD_SHIFT_Z,                // CMD+SHIFT_Y
+};
+
 typedef union {
   uint32_t raw;
   struct {
