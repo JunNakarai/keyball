@@ -53,6 +53,12 @@ void disable_click_layer(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     
     switch (keycode) {
+        case KC_MY_CMD_C:       if (record->event.pressed) { SEND_STRING(SS_LGUI("c")); } break;
+        case KC_MY_CMD_V:       if (record->event.pressed) { SEND_STRING(SS_LGUI("v")); } break;
+        case KC_MY_CMD_X:       if (record->event.pressed) { SEND_STRING(SS_LGUI("x")); } break;
+        case KC_MY_CMD_Z:       if (record->event.pressed) { SEND_STRING(SS_LGUI("z")); } break;
+        case KC_MY_CMD_SHIFT_Z: if (record->event.pressed) { SEND_STRING(SS_LGUI(SS_LSFT("z"))); } break;
+
         case KC_MY_BTN1:
         case KC_MY_BTN2:
         case KC_MY_BTN3:
@@ -115,6 +121,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
          default:
             if  (record->event.pressed) {
+                if (state == CLICKING || state == SCROLLING)
+                {
+                    enable_click_layer();
+                    return false;
+                }
+
+                for (int i = 0; i < sizeof(ignore_disable_mouse_layer_keys) / sizeof(ignore_disable_mouse_layer_keys[0]); i++)
+                {
+                    if (keycode == ignore_disable_mouse_layer_keys[i])
+                    {
+                        enable_click_layer();
+                        return true;
+                    }
+                }
                 disable_click_layer();
             }
         
