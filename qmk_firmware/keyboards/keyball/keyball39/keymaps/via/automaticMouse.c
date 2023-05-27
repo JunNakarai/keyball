@@ -27,6 +27,14 @@ int16_t scroll_v_mouse_interval_counter;   // 垂直スクロールの入力を�
 int16_t scroll_h_mouse_interval_counter;   // 水平スクロールの入力をカウントする。  Counts horizontal scrolling inputs.
 int16_t after_click_lock_movement = 0;      // クリック入力後の移動量を測定する変数。 Variable that measures the amount of movement after a click input.
 
+const uint16_t ignore_disable_mouse_layer_keys[] = {KC_UP, KC_DOWN, KC_LEFT, KC_RIGHT, 
+                                                    KC_MY_CMD_X,
+                                                    KC_MY_CMD_C,
+                                                    KC_MY_CMD_V,
+                                                    KC_MY_CMD_Z,
+                                                    KC_MY_CMD_SHIFT_Z,
+                                                    };   // この配列で指定されたキーはマウスレイヤー中に押下してもマウスレイヤーを解除しない
+
 // クリック用のレイヤーを有効にする。　Enable layers for clicks
 void enable_click_layer(void) {
     layer_on(CLICK_LAYER);
